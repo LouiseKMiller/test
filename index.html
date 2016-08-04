@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Star Trek Hangman game - Louise Miller Assignment 3</title>
+	<link rel="stylesheet" href="assets/css/reset.css">
+	<link rel="stylesheet" href="assets/css/style.css">
+
+	<script type="text/javascript" src="assets/javascript/game.js"></script>
+
+
+</head>
+<body>
+<div class="page-wrap star-background">
+	<h1><span></span>STAR TREK HANGMAN</h1>
+	<div class="container">
+		<aside>
+			<div class="output" id="answer">&nbsp;</div>
+			<img id="winPic" src="assets/images/spock.jpg" alt="spock">
+		</aside>
+		<div class="main-block">
+
+				<h2>Guess a letter by pressing the key!</h2>
+				<h2>Wins so far:</h2>
+				<div class="output" id="wins">0</div>
+				<h2>Current Word to Guess: </h2>
+				<div class="output" id="word"></div>
+				<h2>Number of Guesses Remaining:</h2>
+				<div class="output" id="triesLeft"><span>12</span></div>
+				<h2>Letters you've already used:</h2>
+				<div class="output" id="guessList"><span>none yet!</span></div>
+		</div>
+	</div>
+</div>
+	<footer class="site-footer">
+		<small>&copy; Copyright 2016 Louise K. Miller</small>
+	</footer>
+
+<script type="text/javascript">
+
+// Initialize screen with first word
+//
+hmgame.initUserWord();
+hmgame.displayWord('#word', hmgame.userWordArray.join("&nbsp"));
+
+// When the user presses a key
+//
+	document.onkeyup = function(event) {
+
+		// Determines which exact key was selected. Make it lowercase
+		userGuess = String.fromCharCode(event.keyCode).toLowerCase();
+
+		// Check if a < key selected < z, and if user did not already try that key
+		if (hmgame.validInput() ==true) {
+
+			// If user guessed a correct letter, update guessed word and see if user won
+			if (hmgame.currentWord().includes(userGuess) == true) {
+				hmgame.updateWord();
+				hmgame.displayWord('#word', hmgame.userWordArray.join("&nbsp"));
+				if (hmgame.currentWord() == hmgame.userWordArray.join("")) {
+					hmgame.winGame();
+				}
+			}
+
+			// If user guessed wrong letter, update list of guessed letters and decrement remaining tries
+			else {		
+				hmgame.triesRemain = hmgame.triesRemain-1;
+				hmgame.allGuesses.push(userGuess);
+				hmgame.displayWord('#triesLeft', hmgame.triesRemain)
+				hmgame.displayWord('#guessList', hmgame.allGuesses)
+				hmgame.soundAlarm();
+				if (hmgame.triesRemain ==0) {
+					hmgame.newGame();
+				}
+			}
+		}
+
+		// Invalid key entry.  Sound the alarm!
+		else {
+			hmgame.soundAlarm();
+		}
+	}
+
+</script>
+
+</body>
+</html>
